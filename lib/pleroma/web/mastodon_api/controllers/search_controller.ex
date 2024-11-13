@@ -50,10 +50,12 @@ defmodule Pleroma.Web.MastodonAPI.SearchController do
 
   defp do_search(
          version,
+         # here is destruct of conn
          %{assigns: %{user: user}, private: %{open_api_spex: %{params: %{q: query} = params}}} =
            conn,
          _
        ) do
+    IO.inspect("called search at ver")
     query = String.trim(query)
     options = search_options(params, user)
     timeout = Keyword.get(Repo.config(), :timeout, 15_000)
@@ -61,17 +63,25 @@ defmodule Pleroma.Web.MastodonAPI.SearchController do
 
     result =
       default_values
+      # foreach statuses, accounts, hashtags
+      # SEARCH in parallel
       |> Enum.map(fn {resource, default_value} ->
+        # here, return func to be called
         if params[:type] in [nil, resource] do
+          # nil or in whitelist resources
           {resource, fn -> resource_search(version, resource, query, options) end}
         else
           {resource, fn -> default_value end}
         end
       end)
+      # call funcs in parallel
+      # return stream it mean like yield
+      # stream of <resource, search results>
       |> Task.async_stream(fn {resource, f} -> {resource, with_fallback(f)} end,
         timeout: timeout,
         on_timeout: :kill_task
       )
+      # reduce the result, with accum is the default: empty result
       |> Enum.reduce(default_values, fn
         {:ok, {resource, result}}, acc ->
           Map.put(acc, resource, result)
