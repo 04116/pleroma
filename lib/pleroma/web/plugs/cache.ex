@@ -53,6 +53,7 @@ defmodule Pleroma.Web.Plugs.Cache do
 
   @impl true
   def call(%{method: "GET"} = conn, opts) do
+    IO.inspect("cehckkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk")
     key = cache_key(conn, opts)
 
     case @cachex.get(:web_resp_cache, key) do
@@ -65,6 +66,7 @@ defmodule Pleroma.Web.Plugs.Cache do
         send_cached(conn, {content_type, body})
 
       {:ok, record} ->
+        IO.inspect("cache hit---------------------" <> record)
         send_cached(conn, record)
 
       {atom, message} when atom in [:ignore, :error] ->

@@ -297,6 +297,8 @@ defmodule Pleroma.Web.ActivityPub.ActivityPub do
   end
 
   defp do_create(%{to: to, actor: actor, context: context, object: object} = params, fake) do
+    IO.inspect(inspect(self()) <> "at ActivityPubbbbbbbbbbbb")
+
     additional = params[:additional] || %{}
     # only accept false as false value
     local = !(params[:local] == false)

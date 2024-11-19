@@ -13,6 +13,7 @@ defmodule Pleroma.Web.PleromaAPI.ChatView do
   alias Pleroma.Web.PleromaAPI.Chat.MessageReferenceView
 
   def render("show.json", %{chat: %Chat{} = chat} = opts) do
+    IO.inspect("called meeeeeeeeee, the viewwwwwwwwwwwwwww")
     recipient = User.get_cached_by_ap_id(chat.recipient)
     last_message = opts[:last_message] || MessageReference.last_message_for_chat(chat)
     account_view_opts = account_view_opts(opts, recipient)
@@ -29,6 +30,7 @@ defmodule Pleroma.Web.PleromaAPI.ChatView do
   end
 
   def render("index.json", %{chats: chats} = opts) do
+    IO.inspect("called meeeeeeeeee, index.json")
     render_many(chats, __MODULE__, "show.json", Map.delete(opts, :chats))
   end
 

@@ -174,6 +174,8 @@ defmodule Pleroma.Web.PleromaAPI.ChatController do
   end
 
   def index(%{assigns: %{user: user}, private: %{open_api_spex: %{params: params}}} = conn, _) do
+    IO.inspect("called meeeeeeeeeeeeee")
+
     chats =
       index_query(user, params)
       |> Repo.all()

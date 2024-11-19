@@ -209,6 +209,8 @@ defmodule Pleroma.Web.MastodonAPI.StatusController do
       Map.put(params, :in_reply_to_status_id, params[:in_reply_to_id])
       |> put_application(conn)
 
+    IO.inspect(inspect(self()) <> "at controller")
+
     with {:ok, activity} <- CommonAPI.post(user, params) do
       try_render(conn, "show.json",
         activity: activity,

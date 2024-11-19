@@ -456,8 +456,13 @@ defmodule Pleroma.Web.CommonAPI do
 
   @spec post(User.t(), map()) :: {:ok, Activity.t()} | {:error, any()}
   def post(user, %{status: _} = data) do
-    with {:ok, draft} <- ActivityDraft.create(user, data) do
-      ActivityPub.create(draft.changes, draft.preview?)
+    IO.inspect(inspect(self()) <> "controller call me do post hereeeeeeeeeee")
+
+    # with {:ok, draft} <- ActivityDraft.create(user, data) do
+    #   ActivityPub.create(draft.changes, draft.preview?)
+    # end
+    case ActivityDraft.create(user, data) do
+      {:ok, draft} -> ActivityPub.create(draft.changes, draft.preview?)
     end
   end
 
